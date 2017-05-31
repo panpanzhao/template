@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.idasound.ju321.tbs.dao.TbsRoleMenuMapper">
+	<!-- 查询sql结果与java model映射 -->
+	<resultMap id="BaseResultMap"
+		type="com.idasound.ju321.tbs.model.TbsRoleMenu">
+		<id property="id" column="ID"  />
+		<result property="menuId" column="MENU_ID"  />
+		<result property="remark" column="REMARK"  />
+		<result property="roleId" column="ROLE_ID"  />
+		<result property="status" column="STATUS"  />
+		<result property="roleName" column="roleName"  />
+		<result property="menuName" column="menuName"  />
+	</resultMap>
+	
+	<!-- 公用查询sql -->
+	<sql id="QueryParam">
+	    <![CDATA[
+	    select 
+		    `ID` as `id`,
+		    `MENU_ID` as `menuId`,`REMARK` as `remark`,`ROLE_ID` as `roleId`,`STATUS` as `status`
+	    from t_bs_role_menu `tbsRoleMenu`
+	    ]]>
+	</sql>
+	<sql id="Query">
+	    <![CDATA[
+	    select 
+		    `ID` as `id`,
+		    `MENU_ID` as `menuId`,`REMARK` as `remark`,`ROLE_ID` as `roleId`,`STATUS` as `status`
+	    from t_bs_role_menu `tbsRoleMenu`
+	    ]]>
+		<where>
+		<if test="id != null and id != ''">
+		   	AND ID = #{id} 
+		</if>
+			<if test="menuId != null and menuId != ''">
+			   	AND MENU_ID = #{menuId} 
+			</if>
+			<if test="remark != null and remark != ''">
+			   	AND REMARK = #{remark} 
+			</if>
+			<if test="roleId != null and roleId != ''">
+			   	AND ROLE_ID = #{roleId} 
+			</if>
+			<if test="status != null and status != ''">
+			   	AND STATUS = #{status} 
+			</if>
+		</where>
+	</sql>
+	<!-- 关联表查询语句 -->
+	<sql id="QueryForeignParam">
+	    <![CDATA[
+	    select 
+		    tbsRoleMenu.ID as `id`,
+		    tbsRoleMenu.MENU_ID as `menuId`,tbsRoleMenu.REMARK as `remark`,tbsRoleMenu.ROLE_ID as `roleId`,tbsRoleMenu.STATUS as `status`
+	    	,tbsRole.ROLE_NAME as `roleName`
+	    	,tbsMenu.MENU_NAME as `menuName`
+	    from t_bs_role_menu `tbsRoleMenu`
+	    	LEFT JOIN t_bs_role `tbsRole`
+	    	on tbsRoleMenu.ROLE_ID=tbsRole.ID
+	    	LEFT JOIN t_bs_menu `tbsMenu`
+	    	on tbsRoleMenu.MENU_ID=tbsMenu.ID
+	    ]]>	
+	</sql>
+	<sql id="QueryForeign">
+	    <![CDATA[
+		select
+		    tbsRoleMenu.ID as `id`,
+		    tbsRoleMenu.MENU_ID as `menuId`,tbsRoleMenu.REMARK as `remark`,tbsRoleMenu.ROLE_ID as `roleId`,tbsRoleMenu.STATUS as `status`
+	    	,tbsRole.ROLE_NAME as `roleName`
+	    	,tbsMenu.MENU_NAME as `menuName`
+	    from t_bs_role_menu `tbsRoleMenu`
+	    	LEFT JOIN t_bs_role `tbsRole`
+	    	on tbsRoleMenu.ROLE_ID=tbsRole.ID
+	    	LEFT JOIN t_bs_menu `tbsMenu`
+	    	on tbsRoleMenu.MENU_ID=tbsMenu.ID
+	    ]]>
+		<where>
+		<if test="id != null and id != ''">
+		   	AND tbsRoleMenu.ID = #{id} 
+		</if>
+			<if test="menuId != null and menuId != ''">
+			   	AND tbsRoleMenu.MENU_ID = #{menuId} 
+			</if>
+			<if test="remark != null and remark != ''">
+			   	AND tbsRoleMenu.REMARK = #{remark} 
+			</if>
+			<if test="roleId != null and roleId != ''">
+			   	AND tbsRoleMenu.ROLE_ID = #{roleId} 
+			</if>
+			<if test="status != null and status != ''">
+			   	AND tbsRoleMenu.STATUS = #{status} 
+			</if>
+			<if test="roleName != null and roleName != ''">
+			   	AND tbsRole.ROLE_NAME = #{roleName} 
+			</if>
+			<if test="menuName != null and menuName != ''">
+			   	AND tbsMenu.MENU_NAME = #{menuName} 
+			</if>
+		</where>	
+	</sql>
+	
+	<!--查询记录数 -->
+	<select id="getMatchedTbsRoleMenuCount"
+		parameterType="com.idasound.ju321.tbs.model.TbsRoleMenu"
+		resultType="java.lang.Integer">
+	    select  count(*) 
+	    from t_bs_role_menu `tbsRoleMenu`
+		LEFT JOIN t_bs_role `tbsRole`
+		on tbsRoleMenu.ROLE_ID=tbsRole.ID
+		LEFT JOIN t_bs_menu `tbsMenu`
+		on tbsRoleMenu.MENU_ID=tbsMenu.ID
+	    <where>
+		<if test="id != null and id != ''">
+		   	AND tbsRoleMenu.ID = #{id} 
+		</if>
+			<if test="menuId != null and menuId != ''">
+			   	AND tbsRoleMenu.MENU_ID = #{menuId} 
+			</if>
+			<if test="remark != null and remark != ''">
+			   	AND tbsRoleMenu.REMARK = #{remark} 
+			</if>
+			<if test="roleId != null and roleId != ''">
+			   	AND tbsRoleMenu.ROLE_ID = #{roleId} 
+			</if>
+			<if test="status != null and status != ''">
+			   	AND tbsRoleMenu.STATUS = #{status} 
+			</if>
+			<if test="roleName != null and roleName != ''">
+			   	AND tbsRole.ROLE_NAME = #{roleName} 
+			</if>
+			<if test="menuName != null and menuName != ''">
+			   	AND tbsMenu.MENU_NAME = #{menuName} 
+			</if>
+	    </where>
+	</select>
+	
+	<!--分页查询 -->
+	<select id="getMatchedTbsRoleMenuList"
+		parameterType="com.idasound.ju321.tbs.model.TbsRoleMenu"
+		resultMap="BaseResultMap">
+		<include refid="QueryForeign" />
+		<if test="orderByClause != null and orderByClause != ''">
+			 <![CDATA[order by ${orderByClause}]]>
+		</if>
+		<if test="startIndex != null and startIndex&gt;=0">
+    	  limit #{startIndex},#{rows}
+    	</if>
+	</select>
+	
+	<!--查询 全部(不分页)-->
+	<select id="getMatchedTbsRoleMenuAll"
+		parameterType="com.idasound.ju321.tbs.model.TbsRoleMenu"
+		resultMap="BaseResultMap">
+		<include refid="QueryForeign" />
+		<if test="orderByClause != null and orderByClause != ''">
+			 <![CDATA[order by ${orderByClause}]]>
+		</if>
+	</select>
+	
+	<!-- 通过主键查询详情 -->
+	<select id="selectByPrimaryKey" 
+		parameterType="com.idasound.ju321.tbs.model.TbsRoleMenu"
+		resultMap="BaseResultMap" >
+		<include refid="QueryForeignParam" />
+	    where 
+	    tbsRoleMenu.ID=#{id}
+	</select>
+  
+	<!-- 删除 -->
+	<delete id="deleteByPrimaryKey"
+		parameterType="com.idasound.ju321.tbs.model.TbsRoleMenu">
+    	<![CDATA[
+	        DELETE FROM t_bs_role_menu WHERE   
+		    ID = #{id}
+    	]]>
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="updateByPrimaryKey"
+		parameterType="com.idasound.ju321.tbs.model.TbsRoleMenu">
+         <![CDATA[
+	        UPDATE t_bs_role_menu SET
+			       `MENU_ID` = #{menuId},
+			       `REMARK` = #{remark},
+			       `ROLE_ID` = #{roleId},
+			       `STATUS` = #{status}
+		    WHERE
+		        ID = #{id}
+    	  ]]>
+	</update>
+	<!-- 通过主键选择性修改 -->
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.idasound.ju321.tbs.model.TbsRoleMenu" >
+	  	update t_bs_role_menu
+		<set >
+		  <if test="menuId != null" >
+		    `MENU_ID` = #{menuId},
+		  </if>
+		  <if test="remark != null" >
+		    `REMARK` = #{remark},
+		  </if>
+		  <if test="roleId != null" >
+		    `ROLE_ID` = #{roleId},
+		  </if>
+		  <if test="status != null" >
+		    `STATUS` = #{status}
+		  </if>
+		</set>
+		WHERE
+        	ID = #{id}
+	</update>
+	
+	<!-- 保存 -->
+	<insert id="insert" 
+		parameterType="com.idasound.ju321.tbs.model.TbsRoleMenu">
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+			select replace(UUID(),'-','')
+		</selectKey>
+		<![CDATA[
+			INSERT INTO t_bs_role_menu (
+			`ID`,
+				`MENU_ID`,
+				`REMARK`,
+				`ROLE_ID`,
+				`STATUS`
+			) VALUES (
+			#{id},
+				#{menuId},
+				#{remark},
+				#{roleId},
+				#{status}
+			)
+		]]>
+	</insert>
+	<!-- 选择性保存 -->
+	<insert id="insertSelective" 
+		parameterType="com.idasound.ju321.tbs.model.TbsRoleMenu" >
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+			select replace(UUID(),'-','')
+		</selectKey>
+	  	insert into t_bs_role_menu
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+			 	`ID`,
+			</if>
+			<if test="menuId != null" >
+			 	`MENU_ID`,
+			</if>
+			<if test="remark != null" >
+			 	`REMARK`,
+			</if>
+			<if test="roleId != null" >
+			 	`ROLE_ID`,
+			</if>
+			<if test="status != null" >
+			 	`STATUS`
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+			 	#{id},
+			</if>
+			<if test="menuId != null" >
+			 	#{menuId},
+			</if>
+			<if test="remark != null" >
+			 	#{remark},
+			</if>
+			<if test="roleId != null" >
+			 	#{roleId},
+			</if>
+			<if test="status != null" >
+			 	#{status}
+			</if>
+		</trim>
+	</insert>
+</mapper>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.idasound.ju321.tbs.dao.TbsRoleMenuRelationMapper">
+	<!-- 查询sql结果与java model映射 -->
+	<resultMap id="BaseTbsRoleMenuResultMap"
+		type="com.idasound.ju321.tbs.model.tbsRoleMenuRelation.TbsRoleMenu">
+		<id property="id" column="ID"  />
+		<result property="menuId" column="MENU_ID"  />
+		<result property="roleId" column="ROLE_ID"  />
+		<result property="tbsRoleId" column="tbsRoleId"  />
+		<result property="roleDesc" column="roleDesc"  />
+		<result property="roleName" column="roleName"  />
+		<result property="tbsMenuId" column="tbsMenuId"  />
+		<result property="menuDesc" column="menuDesc"  />
+		<result property="menuName" column="menuName"  />
+		<result property="parentId" column="parentId"  />
+	</resultMap>
+	
+	<resultMap id="BaseTbsRoleResultMap"
+		type="com.idasound.ju321.tbs.model.tbsRoleMenuRelation.TbsRole">
+		<id property="tbsRoleId" column="ID"  />
+		<result property="roleDesc" column="roleDesc"  />
+		<result property="roleName" column="roleName"  />
+	</resultMap>
+	<resultMap id="BaseTbsMenuResultMap"
+		type="com.idasound.ju321.tbs.model.tbsRoleMenuRelation.TbsMenu">
+		<id property="tbsMenuId" column="ID"  />
+		<result property="menuDesc" column="menuDesc"  />
+		<result property="menuName" column="menuName"  />
+		<result property="parentId" column="parentId"  />
+	</resultMap>
+	
+
+	<!-- 公用查询sql -->
+	<sql id="QueryForeignParam">
+	    <![CDATA[
+	    select 
+		    tbsRoleMenu.ID as id,
+		    tbsRoleMenu.MENU_ID as menuId,tbsRoleMenu.ROLE_ID as roleId
+	    	 ,tbsRole.ID as tbsRoleId,tbsRole.ROLE_DESC as roleDesc,tbsRole.ROLE_NAME as roleName
+	    	 ,tbsMenu.ID as tbsMenuId,tbsMenu.MENU_DESC as menuDesc,tbsMenu.MENU_NAME as menuName,tbsMenu.PARENT_ID as parentId
+	    from t_bs_role_menu tbsRoleMenu
+	    	LEFT JOIN t_bs_role tbsRole
+	    	on tbsRoleMenu.ROLE_ID=tbsRole.ID
+	    	LEFT JOIN t_bs_menu tbsMenu
+	    	on tbsRoleMenu.MENU_ID=tbsMenu.ID
+	    ]]>	
+	</sql>
+	
+	<!-- 通过外键角色查询用户信息-->
+	<select id="selectUnCheckTbsRoleList"
+		parameterType="java.lang.String"
+		resultMap="BaseTbsRoleResultMap">
+		<![CDATA[
+		select 
+		    tbsRole.ID as tbsRoleId,
+	    	tbsRole.ROLE_DESC as roleDesc,tbsRole.ROLE_NAME as roleName
+	    from t_bs_role tbsRole
+		where  tbsRole.ID not in
+		(select tbsRoleMenu.ROLE_ID from t_bs_role_menu tbsRoleMenu where tbsRoleMenu.MENU_ID=#{value})
+		]]>
+	</select>
+	<select id="selectCheckTbsRoleList" 
+		parameterType="java.lang.String"
+		resultMap="BaseTbsRoleMenuResultMap" >
+		<include refid="QueryForeignParam" />
+	    where tbsRoleMenu.MENU_ID=#{value}
+	</select>
+	
+	<select id="selectUnCheckTbsMenuList"
+		parameterType="java.lang.String"
+		resultMap="BaseTbsMenuResultMap">
+		<![CDATA[
+		select 
+		    tbsMenu.ID as tbsMenuId,
+	    	tbsMenu.MENU_DESC as menuDesc,tbsMenu.MENU_NAME as menuName,tbsMenu.PARENT_ID as parentId
+	    from t_bs_menu tbsMenu
+		where  tbsMenu.ID not in
+		(select tbsRoleMenu.MENU_ID from t_bs_role_menu tbsRoleMenu where tbsRoleMenu.ROLE_ID=#{value})
+		]]>
+	</select>
+	<select id="selectCheckTbsMenuList" 
+		parameterType="java.lang.String"
+		resultMap="BaseTbsRoleMenuResultMap" >
+		<include refid="QueryForeignParam" />
+	    where tbsRoleMenu.ROLE_ID=#{value}
+	</select>	
+	
+	
+	
+	<!-- 删除 -->
+	<delete id="deleteByPrimaryKey"
+		parameterType="com.idasound.ju321.tbs.model.tbsRoleMenuRelation.TbsRoleMenu">
+    	<![CDATA[
+	        DELETE FROM t_bs_role_menu WHERE   
+		    ID = #{id}
+    	]]>
+	</delete>
+	<!-- 选择性保存 -->
+	<insert id="insertSelective" 
+		parameterType="com.idasound.ju321.tbs.model.tbsRoleMenuRelation.TbsRoleMenu" >
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+			select sys_guid() from dual
+		</selectKey>
+	  	insert into t_bs_role_menu
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+			 	ID,
+			</if>
+			<if test="menuId != null" >
+			 	MENU_ID,
+			</if>
+			<if test="roleId != null" >
+			 	ROLE_ID
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+			 	#{id},
+			</if>
+			<if test="menuId != null" >
+			 	#{menuId},
+			</if>
+			<if test="roleId != null" >
+			 	#{roleId}
+			</if>
+		</trim>
+	</insert>
+</mapper>

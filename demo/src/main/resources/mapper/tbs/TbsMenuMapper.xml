@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.idasound.ju321.tbs.dao.TbsMenuMapper">
+	<!-- 查询sql结果与java model映射 -->
+	<resultMap id="BaseResultMap"
+		type="com.idasound.ju321.tbs.model.TbsMenu">
+		<id property="id" column="ID"  />
+		<result property="menuSort" column="MENU_SORT"  />
+		<result property="displayFlag" column="DISPLAY_FLAG"  />
+		<result property="menuDesc" column="MENU_DESC"  />
+		<result property="menuName" column="MENU_NAME"  />
+		<result property="menuUrl" column="MENU_URL"  />
+		<result property="parentId" column="PARENT_ID"  />
+		<result property="remark" column="REMARK"  />
+		<result property="status" column="STATUS"  />
+		<result property="parentMenuName" column="parentMenuName"  />
+	</resultMap>
+	
+	<!-- 公用查询sql -->
+	<sql id="QueryParam">
+	    <![CDATA[
+	    select 
+		    `ID` as `id`,
+		    `MENU_SORT` as `menuSort`,`DISPLAY_FLAG` as `displayFlag`,`MENU_DESC` as `menuDesc`,`MENU_NAME` as `menuName`,`MENU_URL` as `menuUrl`,`PARENT_ID` as `parentId`,`REMARK` as `remark`,`STATUS` as `status`
+	    from t_bs_menu `tbsMenu`
+	    ]]>
+	</sql>
+	<sql id="Query">
+	    <![CDATA[
+	    select 
+		    `ID` as `id`,
+		    `MENU_SORT` as `menuSort`,`DISPLAY_FLAG` as `displayFlag`,`MENU_DESC` as `menuDesc`,`MENU_NAME` as `menuName`,`MENU_URL` as `menuUrl`,`PARENT_ID` as `parentId`,`REMARK` as `remark`,`STATUS` as `status`
+	    from t_bs_menu `tbsMenu`
+	    ]]>
+		<where>
+		<if test="id != null and id != ''">
+		   	AND ID = #{id} 
+		</if>
+			<if test="menuSort != null and menuSort != ''">
+			   	AND MENU_SORT = #{menuSort} 
+			</if>
+			<if test="displayFlag != null and displayFlag != ''">
+			   	AND DISPLAY_FLAG = #{displayFlag} 
+			</if>
+			<if test="menuDesc != null and menuDesc != ''">
+			   	AND MENU_DESC = #{menuDesc} 
+			</if>
+			<if test="menuName != null and menuName != ''">
+			   	AND MENU_NAME = #{menuName} 
+			</if>
+			<if test="menuUrl != null and menuUrl != ''">
+			   	AND MENU_URL = #{menuUrl} 
+			</if>
+			<if test="parentId != null and parentId != ''">
+			   	AND PARENT_ID = #{parentId} 
+			</if>
+			<if test="remark != null and remark != ''">
+			   	AND REMARK = #{remark} 
+			</if>
+			<if test="status != null and status != ''">
+			   	AND STATUS = #{status} 
+			</if>
+		</where>
+	</sql>
+	<!-- 关联表查询语句 -->
+	<sql id="QueryForeignParam">
+	    <![CDATA[
+	    select 
+		    tbsMenu.ID as `id`,
+		    tbsMenu.MENU_SORT as `menuSort`,tbsMenu.DISPLAY_FLAG as `displayFlag`,tbsMenu.MENU_DESC as `menuDesc`,tbsMenu.MENU_NAME as `menuName`,tbsMenu.MENU_URL as `menuUrl`,tbsMenu.PARENT_ID as `parentId`,tbsMenu.REMARK as `remark`,tbsMenu.STATUS as `status`
+	    	,parentTbsMenu.MENU_NAME as `parentMenuName`
+	    from t_bs_menu `tbsMenu`
+	    	LEFT JOIN t_bs_menu `parentTbsMenu`
+	    	on tbsMenu.PARENT_ID=parentTbsMenu.ID
+	    ]]>	
+	</sql>
+	<sql id="QueryForeign">
+	    <![CDATA[
+		select
+		    tbsMenu.ID as `id`,
+		    tbsMenu.MENU_SORT as `menuSort`,tbsMenu.DISPLAY_FLAG as `displayFlag`,tbsMenu.MENU_DESC as `menuDesc`,tbsMenu.MENU_NAME as `menuName`,tbsMenu.MENU_URL as `menuUrl`,tbsMenu.PARENT_ID as `parentId`,tbsMenu.REMARK as `remark`,tbsMenu.STATUS as `status`
+	    	,parentTbsMenu.MENU_NAME as `parentMenuName`
+	    from t_bs_menu `tbsMenu`
+	    	LEFT JOIN t_bs_menu `parentTbsMenu`
+	    	on tbsMenu.PARENT_ID=parentTbsMenu.ID
+	    ]]>
+		<where>
+		<if test="id != null and id != ''">
+		   	AND tbsMenu.ID = #{id} 
+		</if>
+			<if test="menuSort != null and menuSort != ''">
+			   	AND tbsMenu.MENU_SORT = #{menuSort} 
+			</if>
+			<if test="displayFlag != null and displayFlag != ''">
+			   	AND tbsMenu.DISPLAY_FLAG = #{displayFlag} 
+			</if>
+			<if test="menuDesc != null and menuDesc != ''">
+			   	AND tbsMenu.MENU_DESC = #{menuDesc} 
+			</if>
+			<if test="menuName != null and menuName != ''">
+			   	AND tbsMenu.MENU_NAME = #{menuName} 
+			</if>
+			<if test="menuUrl != null and menuUrl != ''">
+			   	AND tbsMenu.MENU_URL = #{menuUrl} 
+			</if>
+			<if test="parentId != null and parentId != ''">
+			   	AND tbsMenu.PARENT_ID = #{parentId} 
+			</if>
+			<if test="remark != null and remark != ''">
+			   	AND tbsMenu.REMARK = #{remark} 
+			</if>
+			<if test="status != null and status != ''">
+			   	AND tbsMenu.STATUS = #{status} 
+			</if>
+			<if test="parentMenuName != null and parentMenuName != ''">
+			   	AND parentTbsMenu.MENU_NAME = #{parentMenuName} 
+			</if>
+		</where>	
+	</sql>
+	
+	<!--查询记录数 -->
+	<select id="getMatchedTbsMenuCount"
+		parameterType="com.idasound.ju321.tbs.model.TbsMenu"
+		resultType="java.lang.Integer">
+	    select  count(*) 
+	    from t_bs_menu `tbsMenu`
+		LEFT JOIN t_bs_menu `parentTbsMenu`
+		on tbsMenu.PARENT_ID=parentTbsMenu.ID
+	    <where>
+		<if test="id != null and id != ''">
+		   	AND tbsMenu.ID = #{id} 
+		</if>
+			<if test="menuSort != null and menuSort != ''">
+			   	AND tbsMenu.MENU_SORT = #{menuSort} 
+			</if>
+			<if test="displayFlag != null and displayFlag != ''">
+			   	AND tbsMenu.DISPLAY_FLAG = #{displayFlag} 
+			</if>
+			<if test="menuDesc != null and menuDesc != ''">
+			   	AND tbsMenu.MENU_DESC = #{menuDesc} 
+			</if>
+			<if test="menuName != null and menuName != ''">
+			   	AND tbsMenu.MENU_NAME = #{menuName} 
+			</if>
+			<if test="menuUrl != null and menuUrl != ''">
+			   	AND tbsMenu.MENU_URL = #{menuUrl} 
+			</if>
+			<if test="parentId != null and parentId != ''">
+			   	AND tbsMenu.PARENT_ID = #{parentId} 
+			</if>
+			<if test="remark != null and remark != ''">
+			   	AND tbsMenu.REMARK = #{remark} 
+			</if>
+			<if test="status != null and status != ''">
+			   	AND tbsMenu.STATUS = #{status} 
+			</if>
+			<if test="parentMenuName != null and parentMenuName != ''">
+			   	AND parentTbsMenu.MENU_NAME = #{parentMenuName} 
+			</if>
+	    </where>
+	</select>
+	
+	<!--分页查询 -->
+	<select id="getMatchedTbsMenuList"
+		parameterType="com.idasound.ju321.tbs.model.TbsMenu"
+		resultMap="BaseResultMap">
+		<include refid="QueryForeign" />
+		<if test="orderByClause != null and orderByClause != ''">
+			 <![CDATA[order by ${orderByClause}]]>
+		</if>
+		<if test="startIndex != null and startIndex&gt;=0">
+    	  limit #{startIndex},#{rows}
+    	</if>
+	</select>
+	
+	<!--查询 全部(不分页)-->
+	<select id="getMatchedTbsMenuAll"
+		parameterType="com.idasound.ju321.tbs.model.TbsMenu"
+		resultMap="BaseResultMap">
+		<include refid="QueryForeign" />
+		<if test="orderByClause != null and orderByClause != ''">
+			 <![CDATA[order by ${orderByClause}]]>
+		</if>
+	</select>
+	
+	<!-- 通过主键查询详情 -->
+	<select id="selectByPrimaryKey" 
+		parameterType="com.idasound.ju321.tbs.model.TbsMenu"
+		resultMap="BaseResultMap" >
+		<include refid="QueryForeignParam" />
+	    where 
+	    tbsMenu.ID=#{id}
+	</select>
+  
+	<!-- 删除 -->
+	<delete id="deleteByPrimaryKey"
+		parameterType="com.idasound.ju321.tbs.model.TbsMenu">
+    	<![CDATA[
+	        DELETE FROM t_bs_menu WHERE   
+		    ID = #{id}
+    	]]>
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="updateByPrimaryKey"
+		parameterType="com.idasound.ju321.tbs.model.TbsMenu">
+         <![CDATA[
+	        UPDATE t_bs_menu SET
+			       `MENU_SORT` = #{menuSort},
+			       `DISPLAY_FLAG` = #{displayFlag},
+			       `MENU_DESC` = #{menuDesc},
+			       `MENU_NAME` = #{menuName},
+			       `MENU_URL` = #{menuUrl},
+			       `PARENT_ID` = #{parentId},
+			       `REMARK` = #{remark},
+			       `STATUS` = #{status}
+		    WHERE
+		        ID = #{id}
+    	  ]]>
+	</update>
+	<!-- 通过主键选择性修改 -->
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.idasound.ju321.tbs.model.TbsMenu" >
+	  	update t_bs_menu
+		<set >
+		  <if test="menuSort != null" >
+		    `MENU_SORT` = #{menuSort},
+		  </if>
+		  <if test="displayFlag != null" >
+		    `DISPLAY_FLAG` = #{displayFlag},
+		  </if>
+		  <if test="menuDesc != null" >
+		    `MENU_DESC` = #{menuDesc},
+		  </if>
+		  <if test="menuName != null" >
+		    `MENU_NAME` = #{menuName},
+		  </if>
+		  <if test="menuUrl != null" >
+		    `MENU_URL` = #{menuUrl},
+		  </if>
+		  <if test="parentId != null" >
+		    `PARENT_ID` = #{parentId},
+		  </if>
+		  <if test="remark != null" >
+		    `REMARK` = #{remark},
+		  </if>
+		  <if test="status != null" >
+		    `STATUS` = #{status}
+		  </if>
+		</set>
+		WHERE
+        	ID = #{id}
+	</update>
+	
+	<!-- 保存 -->
+	<insert id="insert" 
+		parameterType="com.idasound.ju321.tbs.model.TbsMenu">
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+			select replace(UUID(),'-','')
+		</selectKey>
+		<![CDATA[
+			INSERT INTO t_bs_menu (
+			`ID`,
+				`MENU_SORT`,
+				`DISPLAY_FLAG`,
+				`MENU_DESC`,
+				`MENU_NAME`,
+				`MENU_URL`,
+				`PARENT_ID`,
+				`REMARK`,
+				`STATUS`
+			) VALUES (
+			#{id},
+				#{menuSort},
+				#{displayFlag},
+				#{menuDesc},
+				#{menuName},
+				#{menuUrl},
+				#{parentId},
+				#{remark},
+				#{status}
+			)
+		]]>
+	</insert>
+	<!-- 选择性保存 -->
+	<insert id="insertSelective" 
+		parameterType="com.idasound.ju321.tbs.model.TbsMenu" >
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+			select replace(UUID(),'-','')
+		</selectKey>
+	  	insert into t_bs_menu
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+			 	`ID`,
+			</if>
+			<if test="menuSort != null" >
+			 	`MENU_SORT`,
+			</if>
+			<if test="displayFlag != null" >
+			 	`DISPLAY_FLAG`,
+			</if>
+			<if test="menuDesc != null" >
+			 	`MENU_DESC`,
+			</if>
+			<if test="menuName != null" >
+			 	`MENU_NAME`,
+			</if>
+			<if test="menuUrl != null" >
+			 	`MENU_URL`,
+			</if>
+			<if test="parentId != null" >
+			 	`PARENT_ID`,
+			</if>
+			<if test="remark != null" >
+			 	`REMARK`,
+			</if>
+			<if test="status != null" >
+			 	`STATUS`
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+			 	#{id},
+			</if>
+			<if test="menuSort != null" >
+			 	#{menuSort},
+			</if>
+			<if test="displayFlag != null" >
+			 	#{displayFlag},
+			</if>
+			<if test="menuDesc != null" >
+			 	#{menuDesc},
+			</if>
+			<if test="menuName != null" >
+			 	#{menuName},
+			</if>
+			<if test="menuUrl != null" >
+			 	#{menuUrl},
+			</if>
+			<if test="parentId != null" >
+			 	#{parentId},
+			</if>
+			<if test="remark != null" >
+			 	#{remark},
+			</if>
+			<if test="status != null" >
+			 	#{status}
+			</if>
+		</trim>
+	</insert>
+</mapper>

@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.idasound.ju321.tbs.dao.TbsUserRoleMapper">
+	<!-- 查询sql结果与java model映射 -->
+	<resultMap id="BaseResultMap"
+		type="com.idasound.ju321.tbs.model.TbsUserRole">
+		<id property="id" column="ID"  />
+		<result property="remark" column="REMARK"  />
+		<result property="roleId" column="ROLE_ID"  />
+		<result property="status" column="STATUS"  />
+		<result property="userId" column="USER_ID"  />
+		<result property="userName" column="userName"  />
+		<result property="roleName" column="roleName"  />
+	</resultMap>
+	
+	<!-- 公用查询sql -->
+	<sql id="QueryParam">
+	    <![CDATA[
+	    select 
+		    `ID` as `id`,
+		    `REMARK` as `remark`,`ROLE_ID` as `roleId`,`STATUS` as `status`,`USER_ID` as `userId`
+	    from t_bs_user_role `tbsUserRole`
+	    ]]>
+	</sql>
+	<sql id="Query">
+	    <![CDATA[
+	    select 
+		    `ID` as `id`,
+		    `REMARK` as `remark`,`ROLE_ID` as `roleId`,`STATUS` as `status`,`USER_ID` as `userId`
+	    from t_bs_user_role `tbsUserRole`
+	    ]]>
+		<where>
+		<if test="id != null and id != ''">
+		   	AND ID = #{id} 
+		</if>
+			<if test="remark != null and remark != ''">
+			   	AND REMARK = #{remark} 
+			</if>
+			<if test="roleId != null and roleId != ''">
+			   	AND ROLE_ID = #{roleId} 
+			</if>
+			<if test="status != null and status != ''">
+			   	AND STATUS = #{status} 
+			</if>
+			<if test="userId != null and userId != ''">
+			   	AND USER_ID = #{userId} 
+			</if>
+		</where>
+	</sql>
+	<!-- 关联表查询语句 -->
+	<sql id="QueryForeignParam">
+	    <![CDATA[
+	    select 
+		    tbsUserRole.ID as `id`,
+		    tbsUserRole.REMARK as `remark`,tbsUserRole.ROLE_ID as `roleId`,tbsUserRole.STATUS as `status`,tbsUserRole.USER_ID as `userId`
+	    	,tbsUser.USER_NAME as `userName`
+	    	,tbsRole.ROLE_NAME as `roleName`
+	    from t_bs_user_role `tbsUserRole`
+	    	LEFT JOIN t_bs_user `tbsUser`
+	    	on tbsUserRole.USER_ID=tbsUser.ID
+	    	LEFT JOIN t_bs_role `tbsRole`
+	    	on tbsUserRole.ROLE_ID=tbsRole.ID
+	    ]]>	
+	</sql>
+	<sql id="QueryForeign">
+	    <![CDATA[
+		select
+		    tbsUserRole.ID as `id`,
+		    tbsUserRole.REMARK as `remark`,tbsUserRole.ROLE_ID as `roleId`,tbsUserRole.STATUS as `status`,tbsUserRole.USER_ID as `userId`
+	    	,tbsUser.USER_NAME as `userName`
+	    	,tbsRole.ROLE_NAME as `roleName`
+	    from t_bs_user_role `tbsUserRole`
+	    	LEFT JOIN t_bs_user `tbsUser`
+	    	on tbsUserRole.USER_ID=tbsUser.ID
+	    	LEFT JOIN t_bs_role `tbsRole`
+	    	on tbsUserRole.ROLE_ID=tbsRole.ID
+	    ]]>
+		<where>
+		<if test="id != null and id != ''">
+		   	AND tbsUserRole.ID = #{id} 
+		</if>
+			<if test="remark != null and remark != ''">
+			   	AND tbsUserRole.REMARK = #{remark} 
+			</if>
+			<if test="roleId != null and roleId != ''">
+			   	AND tbsUserRole.ROLE_ID = #{roleId} 
+			</if>
+			<if test="status != null and status != ''">
+			   	AND tbsUserRole.STATUS = #{status} 
+			</if>
+			<if test="userId != null and userId != ''">
+			   	AND tbsUserRole.USER_ID = #{userId} 
+			</if>
+			<if test="userName != null and userName != ''">
+			   	AND tbsUser.USER_NAME = #{userName} 
+			</if>
+			<if test="roleName != null and roleName != ''">
+			   	AND tbsRole.ROLE_NAME = #{roleName} 
+			</if>
+		</where>	
+	</sql>
+	
+	<!--查询记录数 -->
+	<select id="getMatchedTbsUserRoleCount"
+		parameterType="com.idasound.ju321.tbs.model.TbsUserRole"
+		resultType="java.lang.Integer">
+	    select  count(*) 
+	    from t_bs_user_role `tbsUserRole`
+		LEFT JOIN t_bs_user `tbsUser`
+		on tbsUserRole.USER_ID=tbsUser.ID
+		LEFT JOIN t_bs_role `tbsRole`
+		on tbsUserRole.ROLE_ID=tbsRole.ID
+	    <where>
+		<if test="id != null and id != ''">
+		   	AND tbsUserRole.ID = #{id} 
+		</if>
+			<if test="remark != null and remark != ''">
+			   	AND tbsUserRole.REMARK = #{remark} 
+			</if>
+			<if test="roleId != null and roleId != ''">
+			   	AND tbsUserRole.ROLE_ID = #{roleId} 
+			</if>
+			<if test="status != null and status != ''">
+			   	AND tbsUserRole.STATUS = #{status} 
+			</if>
+			<if test="userId != null and userId != ''">
+			   	AND tbsUserRole.USER_ID = #{userId} 
+			</if>
+			<if test="userName != null and userName != ''">
+			   	AND tbsUser.USER_NAME = #{userName} 
+			</if>
+			<if test="roleName != null and roleName != ''">
+			   	AND tbsRole.ROLE_NAME = #{roleName} 
+			</if>
+	    </where>
+	</select>
+	
+	<!--分页查询 -->
+	<select id="getMatchedTbsUserRoleList"
+		parameterType="com.idasound.ju321.tbs.model.TbsUserRole"
+		resultMap="BaseResultMap">
+		<include refid="QueryForeign" />
+		<if test="orderByClause != null and orderByClause != ''">
+			 <![CDATA[order by ${orderByClause}]]>
+		</if>
+		<if test="startIndex != null and startIndex&gt;=0">
+    	  limit #{startIndex},#{rows}
+    	</if>
+	</select>
+	
+	<!--查询 全部(不分页)-->
+	<select id="getMatchedTbsUserRoleAll"
+		parameterType="com.idasound.ju321.tbs.model.TbsUserRole"
+		resultMap="BaseResultMap">
+		<include refid="QueryForeign" />
+		<if test="orderByClause != null and orderByClause != ''">
+			 <![CDATA[order by ${orderByClause}]]>
+		</if>
+	</select>
+	
+	<!-- 通过主键查询详情 -->
+	<select id="selectByPrimaryKey" 
+		parameterType="com.idasound.ju321.tbs.model.TbsUserRole"
+		resultMap="BaseResultMap" >
+		<include refid="QueryForeignParam" />
+	    where 
+	    tbsUserRole.ID=#{id}
+	</select>
+  
+	<!-- 删除 -->
+	<delete id="deleteByPrimaryKey"
+		parameterType="com.idasound.ju321.tbs.model.TbsUserRole">
+    	<![CDATA[
+	        DELETE FROM t_bs_user_role WHERE   
+		    ID = #{id}
+    	]]>
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="updateByPrimaryKey"
+		parameterType="com.idasound.ju321.tbs.model.TbsUserRole">
+         <![CDATA[
+	        UPDATE t_bs_user_role SET
+			       `REMARK` = #{remark},
+			       `ROLE_ID` = #{roleId},
+			       `STATUS` = #{status},
+			       `USER_ID` = #{userId}
+		    WHERE
+		        ID = #{id}
+    	  ]]>
+	</update>
+	<!-- 通过主键选择性修改 -->
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.idasound.ju321.tbs.model.TbsUserRole" >
+	  	update t_bs_user_role
+		<set >
+		  <if test="remark != null" >
+		    `REMARK` = #{remark},
+		  </if>
+		  <if test="roleId != null" >
+		    `ROLE_ID` = #{roleId},
+		  </if>
+		  <if test="status != null" >
+		    `STATUS` = #{status},
+		  </if>
+		  <if test="userId != null" >
+		    `USER_ID` = #{userId}
+		  </if>
+		</set>
+		WHERE
+        	ID = #{id}
+	</update>
+	
+	<!-- 保存 -->
+	<insert id="insert" 
+		parameterType="com.idasound.ju321.tbs.model.TbsUserRole">
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+			select replace(UUID(),'-','')
+		</selectKey>
+		<![CDATA[
+			INSERT INTO t_bs_user_role (
+			`ID`,
+				`REMARK`,
+				`ROLE_ID`,
+				`STATUS`,
+				`USER_ID`
+			) VALUES (
+			#{id},
+				#{remark},
+				#{roleId},
+				#{status},
+				#{userId}
+			)
+		]]>
+	</insert>
+	<!-- 选择性保存 -->
+	<insert id="insertSelective" 
+		parameterType="com.idasound.ju321.tbs.model.TbsUserRole" >
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+			select replace(UUID(),'-','')
+		</selectKey>
+	  	insert into t_bs_user_role
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+			 	`ID`,
+			</if>
+			<if test="remark != null" >
+			 	`REMARK`,
+			</if>
+			<if test="roleId != null" >
+			 	`ROLE_ID`,
+			</if>
+			<if test="status != null" >
+			 	`STATUS`,
+			</if>
+			<if test="userId != null" >
+			 	`USER_ID`
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+			 	#{id},
+			</if>
+			<if test="remark != null" >
+			 	#{remark},
+			</if>
+			<if test="roleId != null" >
+			 	#{roleId},
+			</if>
+			<if test="status != null" >
+			 	#{status},
+			</if>
+			<if test="userId != null" >
+			 	#{userId}
+			</if>
+		</trim>
+	</insert>
+</mapper>

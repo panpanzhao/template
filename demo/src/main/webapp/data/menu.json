@@ -1,0 +1,49 @@
+[
+  {
+    "text": "页面信息",
+    "children": [
+          {
+        "text": "系统管理_用户角色关系页面",
+        "attributes": {
+              "url": "tbs/tbsUserRole/list"
+        }
+      },
+      {
+        "text": "系统管理_权限页面",
+        "attributes": {
+              "url": "tbs/tbsMenu/list"
+        }
+      },
+      {
+        "text": "系统管理_角色权限关系页面",
+        "attributes": {
+              "url": "tbs/tbsRoleMenu/list"
+        }
+      },
+      {
+        "text": "系统管理_用户页面",
+        "attributes": {
+              "url": "tbs/tbsUser/list"
+        }
+      },
+      {
+        "text": "系统管理_角色页面",
+        "attributes": {
+              "url": "tbs/tbsRole/list"
+        }
+      },
+      {
+        "text": "用户角色关系配置",
+        "attributes": {
+              "url": "tbs/tbsUserRoleRelation/list"
+        }
+      },
+      {
+        "text": "角色权限关系配置",
+        "attributes": {
+              "url": "tbs/tbsRoleMenuRelation/list"
+        }
+      }
+    ]
+  }
+]

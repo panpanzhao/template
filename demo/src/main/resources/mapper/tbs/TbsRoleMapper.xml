@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.idasound.ju321.tbs.dao.TbsRoleMapper">
+	<!-- 查询sql结果与java model映射 -->
+	<resultMap id="BaseResultMap"
+		type="com.idasound.ju321.tbs.model.TbsRole">
+		<id property="id" column="ID"  />
+		<result property="isAdmin" column="IS_ADMIN"  />
+		<result property="isSupplier" column="IS_SUPPLIER"  />
+		<result property="parentId" column="PARENT_ID"  />
+		<result property="remark" column="REMARK"  />
+		<result property="roleDesc" column="ROLE_DESC"  />
+		<result property="roleName" column="ROLE_NAME"  />
+		<result property="status" column="STATUS"  />
+		<result property="supplierId" column="SUPPLIER_ID"  />
+	</resultMap>
+	
+	<!-- 公用查询sql -->
+	<sql id="QueryParam">
+	    <![CDATA[
+	    select 
+		    `ID` as `id`,
+		    `IS_ADMIN` as `isAdmin`,`IS_SUPPLIER` as `isSupplier`,`PARENT_ID` as `parentId`,`REMARK` as `remark`,`ROLE_DESC` as `roleDesc`,`ROLE_NAME` as `roleName`,`STATUS` as `status`,`SUPPLIER_ID` as `supplierId`
+	    from t_bs_role `tbsRole`
+	    ]]>
+	</sql>
+	<sql id="Query">
+	    <![CDATA[
+	    select 
+		    `ID` as `id`,
+		    `IS_ADMIN` as `isAdmin`,`IS_SUPPLIER` as `isSupplier`,`PARENT_ID` as `parentId`,`REMARK` as `remark`,`ROLE_DESC` as `roleDesc`,`ROLE_NAME` as `roleName`,`STATUS` as `status`,`SUPPLIER_ID` as `supplierId`
+	    from t_bs_role `tbsRole`
+	    ]]>
+		<where>
+		<if test="id != null and id != ''">
+		   	AND ID = #{id} 
+		</if>
+			<if test="isAdmin != null and isAdmin != ''">
+			   	AND IS_ADMIN = #{isAdmin} 
+			</if>
+			<if test="isSupplier != null and isSupplier != ''">
+			   	AND IS_SUPPLIER = #{isSupplier} 
+			</if>
+			<if test="parentId != null and parentId != ''">
+			   	AND PARENT_ID = #{parentId} 
+			</if>
+			<if test="remark != null and remark != ''">
+			   	AND REMARK = #{remark} 
+			</if>
+			<if test="roleDesc != null and roleDesc != ''">
+			   	AND ROLE_DESC = #{roleDesc} 
+			</if>
+			<if test="roleName != null and roleName != ''">
+			   	AND ROLE_NAME = #{roleName} 
+			</if>
+			<if test="status != null and status != ''">
+			   	AND STATUS = #{status} 
+			</if>
+			<if test="supplierId != null and supplierId != ''">
+			   	AND SUPPLIER_ID = #{supplierId} 
+			</if>
+		</where>
+	</sql>
+	
+	<!--查询记录数 -->
+	<select id="getMatchedTbsRoleCount"
+		parameterType="com.idasound.ju321.tbs.model.TbsRole"
+		resultType="java.lang.Integer">
+	    select  count(*) 
+	    from t_bs_role `tbsRole`
+	    <where>
+		<if test="id != null and id != ''">
+		   	AND tbsRole.ID = #{id} 
+		</if>
+			<if test="isAdmin != null and isAdmin != ''">
+			   	AND tbsRole.IS_ADMIN = #{isAdmin} 
+			</if>
+			<if test="isSupplier != null and isSupplier != ''">
+			   	AND tbsRole.IS_SUPPLIER = #{isSupplier} 
+			</if>
+			<if test="parentId != null and parentId != ''">
+			   	AND tbsRole.PARENT_ID = #{parentId} 
+			</if>
+			<if test="remark != null and remark != ''">
+			   	AND tbsRole.REMARK = #{remark} 
+			</if>
+			<if test="roleDesc != null and roleDesc != ''">
+			   	AND tbsRole.ROLE_DESC = #{roleDesc} 
+			</if>
+			<if test="roleName != null and roleName != ''">
+			   	AND tbsRole.ROLE_NAME = #{roleName} 
+			</if>
+			<if test="status != null and status != ''">
+			   	AND tbsRole.STATUS = #{status} 
+			</if>
+			<if test="supplierId != null and supplierId != ''">
+			   	AND tbsRole.SUPPLIER_ID = #{supplierId} 
+			</if>
+	    </where>
+	</select>
+	
+	<!--分页查询 -->
+	<select id="getMatchedTbsRoleList"
+		parameterType="com.idasound.ju321.tbs.model.TbsRole"
+		resultMap="BaseResultMap">
+		<include refid="Query" />
+		<if test="orderByClause != null and orderByClause != ''">
+			 <![CDATA[order by ${orderByClause}]]>
+		</if>
+		<if test="startIndex != null and startIndex&gt;=0">
+    	  limit #{startIndex},#{rows}
+    	</if>
+	</select>
+	
+	<!--查询 全部(不分页)-->
+	<select id="getMatchedTbsRoleAll"
+		parameterType="com.idasound.ju321.tbs.model.TbsRole"
+		resultMap="BaseResultMap">
+		<include refid="Query" />
+		<if test="orderByClause != null and orderByClause != ''">
+			 <![CDATA[order by ${orderByClause}]]>
+		</if>
+	</select>
+	
+	<!-- 通过主键查询详情 -->
+	<select id="selectByPrimaryKey" 
+		parameterType="com.idasound.ju321.tbs.model.TbsRole"
+		resultMap="BaseResultMap" >
+		<include refid="QueryParam" />
+	    where 
+	    tbsRole.ID=#{id}
+	</select>
+  
+	<!-- 删除 -->
+	<delete id="deleteByPrimaryKey"
+		parameterType="com.idasound.ju321.tbs.model.TbsRole">
+    	<![CDATA[
+	        DELETE FROM t_bs_role WHERE   
+		    ID = #{id}
+    	]]>
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="updateByPrimaryKey"
+		parameterType="com.idasound.ju321.tbs.model.TbsRole">
+         <![CDATA[
+	        UPDATE t_bs_role SET
+			       `IS_ADMIN` = #{isAdmin},
+			       `IS_SUPPLIER` = #{isSupplier},
+			       `PARENT_ID` = #{parentId},
+			       `REMARK` = #{remark},
+			       `ROLE_DESC` = #{roleDesc},
+			       `ROLE_NAME` = #{roleName},
+			       `STATUS` = #{status},
+			       `SUPPLIER_ID` = #{supplierId}
+		    WHERE
+		        ID = #{id}
+    	  ]]>
+	</update>
+	<!-- 通过主键选择性修改 -->
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.idasound.ju321.tbs.model.TbsRole" >
+	  	update t_bs_role
+		<set >
+		  <if test="isAdmin != null" >
+		    `IS_ADMIN` = #{isAdmin},
+		  </if>
+		  <if test="isSupplier != null" >
+		    `IS_SUPPLIER` = #{isSupplier},
+		  </if>
+		  <if test="parentId != null" >
+		    `PARENT_ID` = #{parentId},
+		  </if>
+		  <if test="remark != null" >
+		    `REMARK` = #{remark},
+		  </if>
+		  <if test="roleDesc != null" >
+		    `ROLE_DESC` = #{roleDesc},
+		  </if>
+		  <if test="roleName != null" >
+		    `ROLE_NAME` = #{roleName},
+		  </if>
+		  <if test="status != null" >
+		    `STATUS` = #{status},
+		  </if>
+		  <if test="supplierId != null" >
+		    `SUPPLIER_ID` = #{supplierId}
+		  </if>
+		</set>
+		WHERE
+        	ID = #{id}
+	</update>
+	
+	<!-- 保存 -->
+	<insert id="insert" 
+		parameterType="com.idasound.ju321.tbs.model.TbsRole">
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+			select replace(UUID(),'-','')
+		</selectKey>
+		<![CDATA[
+			INSERT INTO t_bs_role (
+			`ID`,
+				`IS_ADMIN`,
+				`IS_SUPPLIER`,
+				`PARENT_ID`,
+				`REMARK`,
+				`ROLE_DESC`,
+				`ROLE_NAME`,
+				`STATUS`,
+				`SUPPLIER_ID`
+			) VALUES (
+			#{id},
+				#{isAdmin},
+				#{isSupplier},
+				#{parentId},
+				#{remark},
+				#{roleDesc},
+				#{roleName},
+				#{status},
+				#{supplierId}
+			)
+		]]>
+	</insert>
+	<!-- 选择性保存 -->
+	<insert id="insertSelective" 
+		parameterType="com.idasound.ju321.tbs.model.TbsRole" >
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+			select replace(UUID(),'-','')
+		</selectKey>
+	  	insert into t_bs_role
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+			 	`ID`,
+			</if>
+			<if test="isAdmin != null" >
+			 	`IS_ADMIN`,
+			</if>
+			<if test="isSupplier != null" >
+			 	`IS_SUPPLIER`,
+			</if>
+			<if test="parentId != null" >
+			 	`PARENT_ID`,
+			</if>
+			<if test="remark != null" >
+			 	`REMARK`,
+			</if>
+			<if test="roleDesc != null" >
+			 	`ROLE_DESC`,
+			</if>
+			<if test="roleName != null" >
+			 	`ROLE_NAME`,
+			</if>
+			<if test="status != null" >
+			 	`STATUS`,
+			</if>
+			<if test="supplierId != null" >
+			 	`SUPPLIER_ID`
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+			 	#{id},
+			</if>
+			<if test="isAdmin != null" >
+			 	#{isAdmin},
+			</if>
+			<if test="isSupplier != null" >
+			 	#{isSupplier},
+			</if>
+			<if test="parentId != null" >
+			 	#{parentId},
+			</if>
+			<if test="remark != null" >
+			 	#{remark},
+			</if>
+			<if test="roleDesc != null" >
+			 	#{roleDesc},
+			</if>
+			<if test="roleName != null" >
+			 	#{roleName},
+			</if>
+			<if test="status != null" >
+			 	#{status},
+			</if>
+			<if test="supplierId != null" >
+			 	#{supplierId}
+			</if>
+		</trim>
+	</insert>
+</mapper>

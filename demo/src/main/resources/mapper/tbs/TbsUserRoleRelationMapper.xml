@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.idasound.ju321.tbs.dao.TbsUserRoleRelationMapper">
+	<!-- 查询sql结果与java model映射 -->
+	<resultMap id="BaseTbsUserRoleResultMap"
+		type="com.idasound.ju321.tbs.model.tbsUserRoleRelation.TbsUserRole">
+		<id property="id" column="ID"  />
+		<result property="roleId" column="ROLE_ID"  />
+		<result property="userId" column="USER_ID"  />
+		<result property="tbsUserId" column="tbsUserId"  />
+		<result property="realName" column="realName"  />
+		<result property="userName" column="userName"  />
+		<result property="tbsRoleId" column="tbsRoleId"  />
+		<result property="roleDesc" column="roleDesc"  />
+		<result property="roleName" column="roleName"  />
+	</resultMap>
+	
+	<resultMap id="BaseTbsUserResultMap"
+		type="com.idasound.ju321.tbs.model.tbsUserRoleRelation.TbsUser">
+		<id property="tbsUserId" column="ID"  />
+		<result property="realName" column="realName"  />
+		<result property="userName" column="userName"  />
+	</resultMap>
+	<resultMap id="BaseTbsRoleResultMap"
+		type="com.idasound.ju321.tbs.model.tbsUserRoleRelation.TbsRole">
+		<id property="tbsRoleId" column="ID"  />
+		<result property="roleDesc" column="roleDesc"  />
+		<result property="roleName" column="roleName"  />
+	</resultMap>
+	
+
+	<!-- 公用查询sql -->
+	<sql id="QueryForeignParam">
+	    <![CDATA[
+	    select 
+		    tbsUserRole.ID as id,
+		    tbsUserRole.ROLE_ID as roleId,tbsUserRole.USER_ID as userId
+	    	 ,tbsUser.ID as tbsUserId,tbsUser.REAL_NAME as realName,tbsUser.USER_NAME as userName
+	    	 ,tbsRole.ID as tbsRoleId,tbsRole.ROLE_DESC as roleDesc,tbsRole.ROLE_NAME as roleName
+	    from t_bs_user_role tbsUserRole
+	    	LEFT JOIN t_bs_user tbsUser
+	    	on tbsUserRole.USER_ID=tbsUser.ID
+	    	LEFT JOIN t_bs_role tbsRole
+	    	on tbsUserRole.ROLE_ID=tbsRole.ID
+	    ]]>	
+	</sql>
+	
+	<!-- 通过外键角色查询用户信息-->
+	<select id="selectUnCheckTbsUserList"
+		parameterType="java.lang.String"
+		resultMap="BaseTbsUserResultMap">
+		<![CDATA[
+		select 
+		    tbsUser.ID as tbsUserId,
+	    	tbsUser.REAL_NAME as realName,tbsUser.USER_NAME as userName
+	    from t_bs_user tbsUser
+		where  tbsUser.ID not in
+		(select tbsUserRole.USER_ID from t_bs_user_role tbsUserRole where tbsUserRole.ROLE_ID=#{value})
+		]]>
+	</select>
+	<select id="selectCheckTbsUserList" 
+		parameterType="java.lang.String"
+		resultMap="BaseTbsUserRoleResultMap" >
+		<include refid="QueryForeignParam" />
+	    where tbsUserRole.ROLE_ID=#{value}
+	</select>
+	
+	<select id="selectUnCheckTbsRoleList"
+		parameterType="java.lang.String"
+		resultMap="BaseTbsRoleResultMap">
+		<![CDATA[
+		select 
+		    tbsRole.ID as tbsRoleId,
+	    	tbsRole.ROLE_DESC as roleDesc,tbsRole.ROLE_NAME as roleName
+	    from t_bs_role tbsRole
+		where  tbsRole.ID not in
+		(select tbsUserRole.ROLE_ID from t_bs_user_role tbsUserRole where tbsUserRole.USER_ID=#{value})
+		]]>
+	</select>
+	<select id="selectCheckTbsRoleList" 
+		parameterType="java.lang.String"
+		resultMap="BaseTbsUserRoleResultMap" >
+		<include refid="QueryForeignParam" />
+	    where tbsUserRole.USER_ID=#{value}
+	</select>	
+	
+	
+	
+	<!-- 删除 -->
+	<delete id="deleteByPrimaryKey"
+		parameterType="com.idasound.ju321.tbs.model.tbsUserRoleRelation.TbsUserRole">
+    	<![CDATA[
+	        DELETE FROM t_bs_user_role WHERE   
+		    ID = #{id}
+    	]]>
+	</delete>
+	<!-- 选择性保存 -->
+	<insert id="insertSelective" 
+		parameterType="com.idasound.ju321.tbs.model.tbsUserRoleRelation.TbsUserRole" >
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+			select sys_guid() from dual
+		</selectKey>
+	  	insert into t_bs_user_role
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+			 	ID,
+			</if>
+			<if test="roleId != null" >
+			 	ROLE_ID,
+			</if>
+			<if test="userId != null" >
+			 	USER_ID
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+			 	#{id},
+			</if>
+			<if test="roleId != null" >
+			 	#{roleId},
+			</if>
+			<if test="userId != null" >
+			 	#{userId}
+			</if>
+		</trim>
+	</insert>
+</mapper>
